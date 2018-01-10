@@ -6,41 +6,46 @@ import java.util.Random;
 public class Forest {
     private Tile[][] forest;
     private int forestDensity;
-    private int[] forestDimensions = new int[2];
+    private int sideLength;
     public ArrayList<Tile> fires;
 
-    public Forest(){
-        forestDensity = 75;
-        forestDimensions[0] = 100;
-        forestDimensions[1] = 100;
+    private void initialize(){
         forest = generateForest(forestDensity);
         fires = new ArrayList<>();
         placeFire();
+    }
+
+    public Forest(){
+        forestDensity = 75;
+        sideLength = 100;
+        initialize();
     }
 
     public Forest(int d) {
         forestDensity = d;
-        forestDimensions[0] = 100;
-        forestDimensions[1] = 100;
-        forest = generateForest(forestDensity);
-        fires = new ArrayList<>();
-        placeFire();
+        sideLength = 100;
+        initialize();
     }
 
-    public Forest(int d, int x, int y) {
+    public Forest(int d, int s) {
         forestDensity = d;
-        forestDimensions[0] = x;
-        forestDimensions[1] = y;
-        forest = generateForest(forestDensity);
-        fires = new ArrayList<>();
-        placeFire();
+        sideLength = s;
+        initialize();
+    }
+
+    public int getSideLength(){
+        return sideLength;
+    }
+
+    public Tile[][] getTiles(){
+        return forest;
     }
 
     private Tile[][] generateForest(int d){
         Random r = new Random();
-        Tile[][] arr = new Tile[forestDimensions[0]][forestDimensions[1]];
-        for (int i = 0; i < forestDimensions[0]; i++) {
-            for (int j = 0; j < forestDimensions[1]; j++) {
+        Tile[][] arr = new Tile[sideLength][sideLength];
+        for (int i = 0; i < sideLength; i++) {
+            for (int j = 0; j < sideLength; j++) {
                 int val = r.nextInt(100) + 1;
                 Tiles type = val <= d ? Tiles.TREE : Tiles.GRASS;
                 arr[i][j] = new Tile(type, i, j);
@@ -52,8 +57,8 @@ public class Forest {
     @Override
     public String toString(){
         String s = "";
-        for (int i = 0; i < forestDimensions[0]; i++){
-            for (int j = 0; j < forestDimensions[1]; j++){
+        for (int i = 0; i < sideLength; i++){
+            for (int j = 0; j < sideLength; j++){
                 switch (this.forest[i][j].getType()){
                     case TREE:
                         s += "X";
@@ -80,10 +85,9 @@ public class Forest {
 
     private void placeFire(){
         try {
-            int x = forestDimensions[0] / 2;
-            int y = forestDimensions[1] / 2;
-            Tile fire = new Tile(Tiles.FIRE, x, y);
-            forest[x][y] = fire;
+            int mid = sideLength / 2;
+            Tile fire = new Tile(Tiles.FIRE, mid, mid);
+            forest[mid][mid] = fire;
             fires.add(fire);
         } catch (Exception e){
             System.out.println("ERR placing fire");
@@ -110,35 +114,49 @@ public class Forest {
         int row = t.location[0];
         int col = t.location[1];
         Random r = new Random();
-
-        if (row > 0){
-            int val = r.nextInt(100) + 1;
-            if (val <= forest[row-1][col].getBurnChance()) {
-                Tile fire = new Tile(Tiles.FIRE, row-1, col);
-                forest[row-1][col] = fire;
-                fires.add(fire);
+        try {
+            if (row > 0) {
+                int val = r.nextInt(100) + 1;
+                if (val <= forest[row - 1][col].getBurnChance()) {
+                    int dur = forest[row - 1][col].getType() == Tiles.TREE ? 0 : 1;
+                    Tile fire = new Tile(Tiles.FIRE, row - 1, col);
+                    fire.duration = dur;
+                    forest[row - 1][col] = fire;
+                    fires.add(fire);
+                }
             }
-        } if (row < forestDimensions[1]-1){
-            int val = r.nextInt(100) + 1;
-            if (val <= forest[row+1][col].getBurnChance()) {
-                Tile fire = new Tile(Tiles.FIRE, row+1, col);
-                forest[row+1][col] = fire;
-                fires.add(fire);
+            if (row < sideLength - 1) {
+                int val = r.nextInt(100) + 1;
+                if (val <= forest[row + 1][col].getBurnChance()) {
+                    int dur = forest[row - 1][col].getType() == Tiles.TREE ? 0 : 1;
+                    Tile fire = new Tile(Tiles.FIRE, row + 1, col);
+                    fire.duration = dur;
+                    forest[row + 1][col] = fire;
+                    fires.add(fire);
+                }
             }
-        } if (col > 0){
-            int val = r.nextInt(100) + 1;
-            if (val <= forest[row][col-1].getBurnChance()) {
-                Tile fire = new Tile(Tiles.FIRE, row, col-1);
-                forest[row][col-1] = fire;
-                fires.add(fire);
+            if (col > 0) {
+                int val = r.nextInt(100) + 1;
+                if (val <= forest[row][col - 1].getBurnChance()) {
+                    int dur = forest[row - 1][col].getType() == Tiles.TREE ? 0 : 1;
+                    Tile fire = new Tile(Tiles.FIRE, row, col - 1);
+                    fire.duration = dur;
+                    forest[row][col - 1] = fire;
+                    fires.add(fire);
+                }
             }
-        } if (col < forestDimensions[0]-1){
-            int val = r.nextInt(100) + 1;
-            if (val <= forest[row][col+1].getBurnChance()) {
-                Tile fire = new Tile(Tiles.FIRE, row, col+1);
-                forest[row][col+1] = fire;
-                fires.add(fire);
+            if (col < sideLength - 1) {
+                int val = r.nextInt(100) + 1;
+                if (val <= forest[row][col + 1].getBurnChance()) {
+                    int dur = forest[row - 1][col].getType() == Tiles.TREE ? 0 : 1;
+                    Tile fire = new Tile(Tiles.FIRE, row, col + 1);
+                    fire.duration = dur;
+                    forest[row][col + 1] = fire;
+                    fires.add(fire);
+                }
             }
+        } catch (Exception e){
+            System.out.printf("%d\t%d", row, col);
         }
     }
 }
