@@ -34,6 +34,7 @@ public class Tile extends JPanel{
                 burnChance = 20;
                 break;
         }
+        this.setBounds(location[0] * 10, location[1] * 10, 10, 10);
     }
 
     @Override
@@ -69,7 +70,8 @@ public class Tile extends JPanel{
                 break;
         }
         g2d.setColor(c);
-        g2d.fillRect(location[0] * 10, location[1] * 10, 100, 100);
+        this.setBackground(c);
+        //g2d.fillRect(location[0] * 10, location[1] * 10, 100, 100);
     }
 
     public Tiles getType(){

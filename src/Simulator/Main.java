@@ -4,7 +4,7 @@ public class Main implements Runnable{
 
     @Override
     public void run() {
-        Forest forest = new Forest(75, 10);
+        Forest forest = new Forest(75, 50);
         Graphics graphics = new Graphics(forest);
 
         while (forest.fires.size() > 0) {
