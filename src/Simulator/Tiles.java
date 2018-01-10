@@ -1,5 +1,5 @@
 package Simulator;
 
-public enum Tiles {
+public enum Tiles { // These are all the types a tile can be
     TREE, ASH, GRASS, FIRE
 }
