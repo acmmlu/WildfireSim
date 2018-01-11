@@ -73,7 +73,7 @@ public class Tile extends JPanel{
     public void setBurnChance(Tiles t){
         switch (t){
             case TREE:
-                burnChance = 50; // Trees are the most likely to ignite.
+                burnChance = 60; // Trees are the most likely to ignite.
                 break;
             case ASH:
                 burnChance = -1; // ash can't catch on fire because the fuel is already exhausted

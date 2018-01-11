@@ -1,29 +1,59 @@
 package Simulator;
 
-public class Main implements Runnable{
+import javax.swing.*;
 
+public class Main implements Runnable{
+    Forest forest;
+    Graphics graphics;
+    Timer timer;
+
+    JFrame menu;
     @Override
     public void run() {
-        Forest forest = new Forest(75, 20); // first parameter is forest density (0-100) second is side length (so 20 is a 20 by 20 square)
-        Graphics graphics = new Graphics(forest);
+        menu = new JFrame();
+        JButton start = new JButton("Start");
+        menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        menu.add(start);
+        menu.pack();
+        menu.setVisible(true);
+        menu.setResizable(true);
+        start.addActionListener(e -> beginSimulation(20, 75, 0, 0, 0, 1000));
+        //beginSimulation(50, 75, 0, 0, 0, 100);
+    }
 
-        while (forest.fires.size() > 0) { // main loop
-            //forest.show();
-            // if you uncomment forest.show() it has a text representation of the burning. This worked and had no memory leak. X meant tree, O meant grass, and a space was ash. F was fire.
-            // I used that before JFrame.
-            System.out.println(Graphics.frameNumber);
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e){
-                System.out.println();
-            }
+    public void beginSimulation(int forestSize, int forestDensity, int treeBC, int grassBC, int ashBC, int speed){
 
-            graphics.nextFrame();
-        }
-        //forest.show();
+        forest = new Forest(forestDensity, forestSize);
+        graphics = new Graphics( forest/*new Forest(forestDensity, forestSize)*/);
+
+        graphics.setVisible(true);
+
+        timer = new Timer(speed, e -> simulationLoop());
+        timer.start();
+    }
+
+    public void simulationLoop(){
+        graphics.nextFrame();
     }
 
     public static void main(String[] args) {
         new Thread(new Main()).start();
     }
 }
+
+
+/* game loop
+while (forest.fires.size() > 0) { // main loop
+                    //forest.show();
+                    // if you uncomment forest.show() it has a text representation of the burning. This worked and had no memory leak. X meant tree, O meant grass, and a space was ash. F was fire.
+                    // I used that before JFrame.
+                    System.out.println(Graphics.frameNumber);
+                    try {
+                        Thread.sleep(speed); // Time between frames
+                    } catch (Exception e) {
+                        System.out.println();
+                    }
+
+                    this.nextFrame();
+                }
+ */
