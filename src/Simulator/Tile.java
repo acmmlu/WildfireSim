@@ -10,12 +10,14 @@ public class Tile extends JPanel{
     public int duration; // only really used for fires (they are extinguished once duration reaches 3. Duration goes up by one every frame.
     public int[] location = new int[2]; // Where in the forest is the tile
     private int burnChance; // how likely is the tile to catch on fire (0-100 with 0 being no chance and 100 being guaranteed)
+    private ForestParams forestParams;
 
-    public Tile(Tiles t, int row, int col){ // Creates a tile with its type and location
+    public Tile(Tiles t, int row, int col, ForestParams forestParams){ // Creates a tile with its type and location
         type = t;
         duration = 0;
         location[0] = row;
         location[1] = col;
+        this.forestParams = forestParams;
         setBurnChance(t);
         this.setBounds(location[0] * 10, location[1] * 10, 10, 10); // This is because every tile is drawn to the Jframe and its background is filled with the appropriate color
     }
@@ -73,16 +75,16 @@ public class Tile extends JPanel{
     public void setBurnChance(Tiles t){
         switch (t){
             case TREE:
-                burnChance = 60; // Trees are the most likely to ignite.
+                burnChance = forestParams.treeBC; // Trees are the most likely to ignite.
                 break;
             case ASH:
-                burnChance = -1; // ash can't catch on fire because the fuel is already exhausted
+                burnChance = forestParams.ashBC; // ash can't catch on fire because the fuel is already exhausted
                 break;
             case FIRE:
                 burnChance = -1; // fire can't catch on fire because it's already burning
                 break;
             case GRASS:
-                burnChance = 20; // grass can light but not very likely
+                burnChance = forestParams.grassBC; // grass can light but not very likely
                 break;
         }
     }

@@ -8,6 +8,7 @@ public class Forest {
     private int forestDensity; // 0-100, 100 being all trees, 0 being no trees.
     private int sideLength; // Dimensions of tile array.
     public ArrayList<Tile> fires; // List of all the fires.
+    private ForestParams forestParams;
 
     private void initialize(){
         forest = generateForest(forestDensity);
@@ -27,9 +28,10 @@ public class Forest {
         initialize();
     }
 
-    public Forest(int d, int s) {
-        forestDensity = d;
-        sideLength = s;
+    public Forest(ForestParams forestParams) {
+        this.forestParams = forestParams;
+        forestDensity = forestParams.forestDensity;
+        sideLength = forestParams.forestSize;
         initialize();
     }
 
@@ -49,7 +51,7 @@ public class Forest {
             for (int j = 0; j < sideLength; j++) {
                 int val = r.nextInt(100) + 1;
                 Tiles type = val <= d ? Tiles.TREE : Tiles.GRASS;
-                arr[i][j] = new Tile(type, i, j);
+                arr[i][j] = new Tile(type, i, j, forestParams);
             }
         }
         return arr;
@@ -88,7 +90,7 @@ public class Forest {
         // changes a tile in the middle to fire.
         try {
             int mid = sideLength / 2;
-            Tile fire = new Tile(Tiles.FIRE, mid, mid);
+            Tile fire = new Tile(Tiles.FIRE, mid, mid, forestParams);
             forest[mid][mid] = fire;
             fires.add(fire);
         } catch (Exception e){
@@ -121,7 +123,7 @@ public class Forest {
             if (row > 0) { // makes sure fire is not along the bottom edge
                 int val = r.nextInt(100) + 1;
                 if (val <= forest[row - 1][col].getBurnChance()) { // Lights fire based on burn chance
-                    if (forest[row-1][col].getType() != Tiles.FIRE && forest[row-1][col].getBurnChance() > 0) { // Make sure the tile isn't already burning
+                    if (forest[row-1][col].getType() != Tiles.FIRE && forest[row-1][col].getBurnChance() > 1) { // Make sure the tile isn't already burning
                         int dur = forest[row - 1][col].getType() == Tiles.TREE ? 0 : 1; // fire burns longer if a tree ignites vs a bush
                         forest[row - 1][col].setType(Tiles.FIRE);
                         forest[row - 1][col].duration = dur;
@@ -132,7 +134,7 @@ public class Forest {
             if (row < sideLength - 1) { // makes sure fire isn't on top edge
                 int val = r.nextInt(100) + 1;
                 if (val <= forest[row + 1][col].getBurnChance()) { // Lights fire based on burn chance
-                    if (forest[row+1][col].getType() != Tiles.FIRE && forest[row+1][col].getBurnChance() > 0) {
+                    if (forest[row+1][col].getType() != Tiles.FIRE && forest[row+1][col].getBurnChance() > 1) {
                         int dur = forest[row + 1][col].getType() == Tiles.TREE ? 0 : 1; // fire burns longer if a tree ignites vs a bush
                         forest[row + 1][col].setType(Tiles.FIRE);
                         forest[row + 1][col].duration = dur;
@@ -143,7 +145,7 @@ public class Forest {
             if (col > 0) { // makes sure fire isn't on left edge
                 int val = r.nextInt(100) + 1;
                 if (val <= forest[row][col - 1].getBurnChance()) { // Lights fire based on burn chance
-                    if (forest[row][col-1].getType() != Tiles.FIRE && forest[row][col-1].getBurnChance() > 0) {
+                    if (forest[row][col-1].getType() != Tiles.FIRE && forest[row][col-1].getBurnChance() > 1) {
                         int dur = forest[row][col - 1].getType() == Tiles.TREE ? 0 : 1; // fire burns longer if a tree ignites vs a bush
                         forest[row][col - 1].setType(Tiles.FIRE);
                         forest[row][col - 1].duration = dur;
@@ -154,7 +156,7 @@ public class Forest {
             if (col < sideLength - 1) { // makes sure fire isn't on right edge
                 int val = r.nextInt(100) + 1;
                 if (val <= forest[row][col + 1].getBurnChance()) { // Lights fire based on burn chance
-                    if (forest[row][col+1].getType() != Tiles.FIRE && forest[row][col+1].getBurnChance() > 0) {
+                    if (forest[row][col+1].getType() != Tiles.FIRE && forest[row][col+1].getBurnChance() > 1) {
                         int dur = forest[row][col + 1].getType() == Tiles.TREE ? 0 : 1; // fire burns longer if a tree ignites vs a bush
                         forest[row][col + 1].setType(Tiles.FIRE);
                         forest[row][col + 1].duration = dur;
