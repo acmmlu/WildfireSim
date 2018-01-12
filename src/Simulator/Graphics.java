@@ -1,12 +1,12 @@
 package Simulator;
 import javax.swing.*;
-import java.awt.*;
 
 public class Graphics extends JFrame{
 
     public static int frameNumber = 0;
     private Forest forest;
     private int speed;
+    private Timer timer;
 
     private void initialize(){
 
@@ -25,6 +25,8 @@ public class Graphics extends JFrame{
         this.setLayout(null);
         this.setBounds(0, 0, (forest.getSideLength()) * 10 + 5, (forest.getSideLength() + 2)* 10);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        ImageIcon img = new ImageIcon("FireIcon.png");
+        this.setIconImage(img.getImage());
 
         // Our forest
         Tile[][] forestTiles = forest.getTiles();
@@ -59,5 +61,10 @@ public class Graphics extends JFrame{
             }
         }
         frameNumber++;
+    }
+
+    public void startTimer(){
+        timer = new Timer(speed, e -> nextFrame());
+        timer.start();
     }
 }

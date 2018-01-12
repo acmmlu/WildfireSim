@@ -22,12 +22,6 @@ public class Forest {
         initialize();
     }
 
-    public Forest(int density) {
-        forestDensity = density;
-        sideLength = 100;
-        initialize();
-    }
-
     public Forest(ForestParams forestParams) {
         this.forestParams = forestParams;
         forestDensity = forestParams.forestDensity;
